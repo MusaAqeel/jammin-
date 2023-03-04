@@ -5,14 +5,15 @@ import { Redirect } from 'react-router-dom';
 import AlbumsList from './AlbumsList';
 import ArtistsList from './ArtistsList';
 import PlayList from './PlayList';
-
+import SongList from './SongList';
 const SearchResult = (props) => {
   const {
     isValidSession,
     loadMore,
     result,
     setCategory,
-    selectedCategory
+    selectedCategory,
+    addSongToList
   } = props;
   const { albums, artists, playlist } = result;
 
@@ -59,18 +60,29 @@ const SearchResult = (props) => {
             }`}
             onClick={() => setCategory('playlist')}
           >
-            PlayLists
+            Playlists
           </button>
         )}
+        <button
+          className={`${
+            selectedCategory === 'songList' ? 'btn active' : 'btn'
+          }`}
+          onClick={() => setCategory('songList')}
+        >
+          Song List
+        </button>
       </div>
       <div className={`${selectedCategory === 'albums' ? '' : 'hide'}`}>
-        {albums && <AlbumsList albums={albums} />}
+        {albums && <AlbumsList albums={albums} addSongToList={addSongToList} />}
       </div>
       <div className={`${selectedCategory === 'artists' ? '' : 'hide'}`}>
-        {artists && <ArtistsList artists={artists} />}
+        {artists && <ArtistsList artists={artists} addSongToList={addSongToList} />}
       </div>
       <div className={`${selectedCategory === 'playlist' ? '' : 'hide'}`}>
-        {playlist && <PlayList playlist={playlist} />}
+        {playlist && <PlayList playlist={playlist} addSongToList={addSongToList} />}
+      </div>
+      <div className={`${selectedCategory === 'songList' ? '' : 'hide'}`}>
+        <SongList songList={props.songList} />
       </div>
       {!_.isEmpty(result[selectedCategory]) &&
         !_.isEmpty(result[selectedCategory].next) && (

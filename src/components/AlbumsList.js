@@ -1,9 +1,11 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import _ from 'lodash';
 import music from '../images/music.jpeg';
 
-const AlbumsList = ({ albums }) => {
+const AlbumsList = (props) => {
+  const { albums, handleAddSong } = props;
+
   return (
     <React.Fragment>
       {Object.keys(albums).length > 0 && (
@@ -35,6 +37,9 @@ const AlbumsList = ({ albums }) => {
                         {album.artists.map((artist) => artist.name).join(', ')}
                       </small>
                     </Card.Text>
+                    <Button variant="primary" onClick={() => handleAddSong(album)}>
+                      Add to list
+                    </Button>
                   </Card.Body>
                 </Card>
               </React.Fragment>

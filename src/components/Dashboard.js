@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import {
   initiateGetResult,
   initiateLoadMoreAlbums,
@@ -12,10 +11,12 @@ import SearchResult from './SearchResult';
 import SearchForm from './SearchForm';
 import Header from './Header';
 import Loader from './Loader';
+import SongList from './SongList';
 
 const Dashboard = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('albums');
+  const [songList, setSongList] = useState([]);
   const { isValidSession, history } = props;
 
   const handleSearch = (searchTerm) => {
@@ -34,6 +35,8 @@ const Dashboard = (props) => {
       });
     }
   };
+
+
 
   const loadMore = async (type) => {
     if (isValidSession()) {
@@ -66,6 +69,10 @@ const Dashboard = (props) => {
     setSelectedCategory(category);
   };
 
+  const addSongToList = (song) => {
+    setSongList([...songList, song]);
+  };
+
   const { albums, artists, playlist } = props;
   const result = { albums, artists, playlist };
 
@@ -76,13 +83,36 @@ const Dashboard = (props) => {
           <Header />
           <SearchForm handleSearch={handleSearch} />
           <Loader show={isLoading}>Loading...</Loader>
-          <SearchResult
-            result={result}
-            loadMore={loadMore}
-            setCategory={setCategory}
-            selectedCategory={selectedCategory}
-            isValidSession={isValidSession}
-          />
+          <div className="dashboard-container">
+            <div className="tabs">
+              <div
+                className={selectedCategory === 'albums' ? 'tab active' : 'tab'}
+                onClick={() => setCategory('albums')}
+              >
+                Albums
+              </div>
+              <div
+                className={selectedCategory === 'artists' ? 'tab active' : 'tab'}
+                onClick={() => setCategory('artists')}
+              >
+                Artists
+              </div>
+              <div
+                className={selectedCategory === 'playlist' ? 'tab active' : 'tab'}
+                onClick={() => setCategory('playlist')}
+              >
+                Playlists
+              </div>
+            </div>
+            <SearchResult
+              result={result}
+              loadMore={loadMore}
+              selectedCategory={selectedCategory}
+              isValidSession={isValidSession}
+              addSongToList={addSongToList}
+            />
+            <SongList songList={songList} />
+          </div>
         </div>
       ) : (
         <Redirect
